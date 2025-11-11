@@ -11,7 +11,7 @@ interface ConfirmDialogProps {
   confirmText?: string;
   cancelText?: string;
   onConfirm: () => void;
-  onCancel: () => void;
+  onCancel?: () => void;
   icon?: keyof typeof Ionicons.glyphMap;
   variant?: "danger" | "warning" | "info";
 }
@@ -21,12 +21,13 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   title,
   message,
   confirmText = "אישור",
-  cancelText = "ביטול",
+  cancelText,
   onConfirm,
   onCancel,
   icon = "alert-circle",
   variant = "warning",
 }) => {
+  const showCancel = cancelText !== undefined && cancelText !== "";
   const iconColor =
     variant === "danger"
       ? "#EF4444"
@@ -46,7 +47,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       visible={visible}
       transparent
       animationType="none"
-      onRequestClose={onCancel}
+      onRequestClose={onCancel || (() => {})}
     >
       <Animated.View
         entering={FadeIn.duration(150)}
@@ -56,7 +57,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         <TouchableOpacity
           style={styles.overlayTouchable}
           activeOpacity={1}
-          onPress={onCancel}
+          onPress={onCancel || (() => {})}
         >
           <Animated.View
             entering={FadeIn.duration(200).delay(50)}
@@ -88,17 +89,22 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
                 <Text style={styles.message}>{message}</Text>
 
                 <View style={styles.buttonsContainer}>
-                  <TouchableOpacity
-                    onPress={onCancel}
-                    style={styles.cancelButton}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={styles.cancelButtonText}>{cancelText}</Text>
-                  </TouchableOpacity>
+                  {showCancel && (
+                    <TouchableOpacity
+                      onPress={onCancel}
+                      style={styles.cancelButton}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={styles.cancelButtonText}>{cancelText}</Text>
+                    </TouchableOpacity>
+                  )}
 
                   <TouchableOpacity
                     onPress={onConfirm}
-                    style={styles.confirmButtonContainer}
+                    style={[
+                      styles.confirmButtonContainer,
+                      !showCancel && styles.confirmButtonFullWidth,
+                    ]}
                     activeOpacity={0.9}
                   >
                     <LinearGradient
@@ -204,6 +210,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
+  },
+  confirmButtonFullWidth: {
+    flex: 0,
+    width: "100%",
   },
   confirmButton: {
     paddingVertical: 14,

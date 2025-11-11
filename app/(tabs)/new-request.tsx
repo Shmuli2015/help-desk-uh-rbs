@@ -1,8 +1,8 @@
+import { Ionicons } from "@expo/vector-icons";
 import type { DocumentPickerAsset } from "expo-document-picker";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  Alert,
   Dimensions,
   KeyboardAvoidingView,
   Platform,
@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Animated, { FadeInUp } from "react-native-reanimated";
-import { Ionicons } from "@expo/vector-icons";
 import FileUpload from "../../components/forms/FileUpload";
 import RolePicker from "../../components/forms/RolePicker";
 import FormContainer from "../../components/layout/FormContainer";
@@ -39,22 +38,21 @@ const NewRequestScreen = () => {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [files, setFiles] = useState<DocumentPickerAsset[]>([]);
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
   const isButtonDisabled = !title.trim() || !selectedRole;
 
   const handleSubmit = () => {
     if (isButtonDisabled) return;
-    Alert.alert("הצלחה", "הפנייה נשלחה בהצלחה!", [
-      {
-        text: "אישור",
-        onPress: () => {
-          setTitle("");
-          setReferralDetails("");
-          setSelectedRole(null);
-          setFiles([]);
-        },
-      },
-    ]);
+    setShowSuccessDialog(true);
+  };
+
+  const handleConfirmSuccess = () => {
+    setShowSuccessDialog(false);
+    setTitle("");
+    setReferralDetails("");
+    setSelectedRole(null);
+    setFiles([]);
   };
 
   const handleLogout = () => {
@@ -149,6 +147,16 @@ const NewRequestScreen = () => {
         onCancel={() => setShowLogoutDialog(false)}
         icon="log-out-outline"
         variant="warning"
+      />
+
+      <ConfirmDialog
+        visible={showSuccessDialog}
+        title="הצלחה"
+        message="הפנייה נשלחה בהצלחה!"
+        confirmText="אישור"
+        onConfirm={handleConfirmSuccess}
+        icon="checkmark-circle"
+        variant="info"
       />
     </KeyboardAvoidingView>
   );
