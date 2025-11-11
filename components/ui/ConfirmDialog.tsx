@@ -1,21 +1,8 @@
+import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import {
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import Animated, {
-  FadeIn,
-  FadeOut,
-  SlideInDown,
-  SlideOutDown,
-} from "react-native-reanimated";
-import { Ionicons } from "@expo/vector-icons";
-
-const AnimatedModal = Animated.createAnimatedComponent(Modal);
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 interface ConfirmDialogProps {
   visible: boolean;
@@ -44,15 +31,15 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     variant === "danger"
       ? "#EF4444"
       : variant === "warning"
-        ? "#FF8800"
-        : "#3B82F6";
+      ? "#FF8800"
+      : "#3B82F6";
 
-  const confirmGradientColors =
+  const confirmGradientColors: [string, string] =
     variant === "danger"
       ? ["#EF4444", "#DC2626"]
       : variant === "warning"
-        ? ["#FF8800", "#FFAA44"]
-        : ["#3B82F6", "#2563EB"];
+      ? ["#FF8800", "#FFAA44"]
+      : ["#3B82F6", "#2563EB"];
 
   return (
     <Modal
@@ -62,8 +49,8 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       onRequestClose={onCancel}
     >
       <Animated.View
-        entering={FadeIn.duration(200)}
-        exiting={FadeOut.duration(200)}
+        entering={FadeIn.duration(150)}
+        exiting={FadeOut.duration(150)}
         style={styles.overlay}
       >
         <TouchableOpacity
@@ -72,11 +59,14 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           onPress={onCancel}
         >
           <Animated.View
-            entering={SlideInDown.springify().damping(15).stiffness(150)}
-            exiting={SlideOutDown.duration(200)}
+            entering={FadeIn.duration(200).delay(50)}
+            exiting={FadeOut.duration(150)}
             style={styles.container}
           >
-            <TouchableOpacity activeOpacity={1} onPress={(e) => e.stopPropagation()}>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={(e) => e.stopPropagation()}
+            >
               <LinearGradient
                 colors={["#ffffff", "#f9fafb"]}
                 style={styles.dialog}
@@ -84,7 +74,12 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
                 end={{ x: 1, y: 1 }}
               >
                 <View style={styles.iconContainer}>
-                  <View style={[styles.iconCircle, { backgroundColor: `${iconColor}15` }]}>
+                  <View
+                    style={[
+                      styles.iconCircle,
+                      { backgroundColor: `${iconColor}15` },
+                    ]}
+                  >
                     <Ionicons name={icon} size={48} color={iconColor} />
                   </View>
                 </View>
@@ -112,7 +107,9 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
                       start={{ x: 0, y: 0 }}
                       end={{ x: 1, y: 0 }}
                     >
-                      <Text style={styles.confirmButtonText}>{confirmText}</Text>
+                      <Text style={styles.confirmButtonText}>
+                        {confirmText}
+                      </Text>
                     </LinearGradient>
                   </TouchableOpacity>
                 </View>
@@ -222,5 +219,3 @@ const styles = StyleSheet.create({
 });
 
 export default ConfirmDialog;
-
-

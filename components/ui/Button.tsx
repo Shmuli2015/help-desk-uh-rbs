@@ -1,6 +1,7 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import {
+  Dimensions,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -15,7 +16,6 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import { Dimensions } from "react-native";
 import Spinner from "./Spinner";
 
 const { width } = Dimensions.get("window");
@@ -81,14 +81,14 @@ const Button: React.FC<ButtonProps> = ({
     onPressOut?.(e);
   };
 
-  const gradientColors =
+  const gradientColors: readonly [string, string, ...string[]] =
     variant === "primary"
       ? disabled || loading
         ? ["#CCCCCC", "#DDDDDD", "#EEEEEE"]
         : ["#FF8800", "#FFAA44", "#FFBB44"]
       : disabled || loading
-        ? ["#CCCCCC", "#DDDDDD"]
-        : ["#6b7280", "#9ca3af"];
+      ? ["#CCCCCC", "#DDDDDD"]
+      : ["#6b7280", "#9ca3af"];
 
   const isDisabled = disabled || loading;
 
@@ -200,4 +200,3 @@ const styles = StyleSheet.create({
 });
 
 export default Button;
-

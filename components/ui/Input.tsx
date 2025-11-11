@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, TextInputProps, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TextInputProps,
+  View,
+} from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -80,6 +86,7 @@ const styles = StyleSheet.create({
     color: "#374151",
     marginBottom: 8,
     textAlign: "right",
+    alignSelf: "flex-end",
   },
   input: {
     backgroundColor: "#f9fafb",
@@ -105,4 +112,3 @@ const styles = StyleSheet.create({
 });
 
 export default Input;
-
