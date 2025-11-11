@@ -1,7 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
-import { Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TabsLayout() {
@@ -11,36 +10,42 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#FF8800",
-        tabBarInactiveTintColor: "#9ca3af",
+        tabBarActiveTintColor: "#ffffff",
+        tabBarInactiveTintColor: "rgba(255, 255, 255, 0.7)",
         tabBarStyle: {
-          backgroundColor: "#ffffff",
-          borderTopWidth: 1,
-          borderTopColor: "#e5e7eb",
-          height: Platform.OS === "ios" ? 48 + insets.bottom : 48,
-          paddingBottom: Platform.OS === "ios" ? insets.bottom : 4,
-          paddingTop: 6,
+          backgroundColor: "#FF8800",
+          borderTopWidth: 0,
+          height: 60 + insets.bottom,
+          paddingBottom: insets.bottom + 8,
+          paddingTop: 8,
           shadowColor: "#000",
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 8,
-          elevation: 8,
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.2,
+          shadowRadius: 12,
+          elevation: 12,
+          position: "absolute",
         },
         tabBarLabelStyle: {
-          fontSize: 14,
+          fontSize: 12,
           fontWeight: "600",
+          marginTop: 4,
         },
         tabBarIconStyle: {
           marginTop: 0,
         },
+        tabBarShowLabel: true,
       }}
     >
       <Tabs.Screen
         name="new-request"
         options={{
           title: "פנייה חדשה",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="add-circle" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons 
+              name={focused ? "add-circle" : "add-circle-outline"} 
+              size={focused ? 28 : 24} 
+              color={color} 
+            />
           ),
         }}
       />
@@ -48,8 +53,12 @@ export default function TabsLayout() {
         name="requests"
         options={{
           title: "פניות",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="list" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons 
+              name={focused ? "list" : "list-outline"} 
+              size={focused ? 28 : 24} 
+              color={color} 
+            />
           ),
         }}
       />

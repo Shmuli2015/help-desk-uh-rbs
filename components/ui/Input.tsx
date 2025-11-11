@@ -6,7 +6,6 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 const AnimatedView = Animated.createAnimatedComponent(View);
 
 interface InputProps extends TextInputProps {
@@ -47,7 +46,7 @@ const Input: React.FC<InputProps> = ({
     <View style={[styles.container, containerStyle]}>
       {label && <Text style={styles.label}>{label}</Text>}
       <AnimatedView style={animatedStyle}>
-        <AnimatedTextInput
+        <TextInput
           style={[
             styles.input,
             {
@@ -60,6 +59,9 @@ const Input: React.FC<InputProps> = ({
           onFocus={handleFocus}
           onBlur={handleBlur}
           textAlign="right"
+          autoCorrect={false}
+          spellCheck={false}
+          importantForAutofill="no"
           {...props}
         />
       </AnimatedView>

@@ -35,6 +35,7 @@ const ROLES = [
 const NewRequestScreen = () => {
   const router = useRouter();
   const [title, setTitle] = useState("");
+  const [referralDetails, setReferralDetails] = useState("");
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [files, setFiles] = useState<DocumentPickerAsset[]>([]);
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
@@ -48,6 +49,7 @@ const NewRequestScreen = () => {
         text: "אישור",
         onPress: () => {
           setTitle("");
+          setReferralDetails("");
           setSelectedRole(null);
           setFiles([]);
         },
@@ -101,6 +103,18 @@ const NewRequestScreen = () => {
               />
             </Animated.View>
 
+            <Animated.View entering={FadeInUp.duration(600).delay(700)}>
+              <Input
+                label="פרטי הפניה"
+                placeholder="הכנס פרטים נוספים על הפנייה"
+                value={referralDetails}
+                onChangeText={setReferralDetails}
+                multiline
+                numberOfLines={4}
+                style={styles.multilineInput}
+              />
+            </Animated.View>
+
             <Animated.View entering={FadeInUp.duration(600).delay(800)}>
               <RolePicker
                 roles={ROLES}
@@ -113,7 +127,7 @@ const NewRequestScreen = () => {
               <FileUpload files={files} onFilesChange={setFiles} />
             </Animated.View>
 
-            <Animated.View entering={FadeInUp.duration(600).delay(1200)}>
+            <Animated.View entering={FadeInUp.duration(600).delay(1100)}>
               <Button
                 title="שלח"
                 onPress={handleSubmit}
