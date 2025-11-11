@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -10,7 +11,6 @@ import {
   View,
 } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import { Ionicons } from "@expo/vector-icons";
 import RequestCard from "../../components/cards/RequestCard";
 import Header from "../../components/layout/Header";
 import OrangeGradientBackground from "../../components/layout/OrangeGradientBackground";
@@ -149,7 +149,8 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingHorizontal: 24,
-    paddingBottom: 100,
+    paddingBottom: 24,
+    flexGrow: 1,
   },
   emptyContainer: {
     alignItems: "center",

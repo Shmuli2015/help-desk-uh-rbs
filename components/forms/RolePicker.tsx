@@ -1,6 +1,13 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import Animated, { FadeInUp } from "react-native-reanimated";
+import {
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 interface RolePickerProps {
   roles: string[];
@@ -48,37 +55,65 @@ const RolePicker: React.FC<RolePickerProps> = ({
         >
           {selectedRole || placeholder}
         </Text>
-        <Text style={styles.rolePickerArrow}>
-          {showRolePicker ? "▲" : "▼"}
-        </Text>
+        <Text style={styles.rolePickerArrow}>{showRolePicker ? "▲" : "▼"}</Text>
       </TouchableOpacity>
 
-      {showRolePicker && (
-        <Animated.View
-          entering={FadeInUp.duration(300)}
-          style={styles.roleList}
+      <Modal
+        visible={showRolePicker}
+        transparent
+        animationType="none"
+        onRequestClose={() => {
+          setShowRolePicker(false);
+          setIsFocused(false);
+        }}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => {
+            setShowRolePicker(false);
+            setIsFocused(false);
+          }}
         >
-          {roles.map((role) => (
+          <Animated.View
+            entering={FadeIn.duration(200)}
+            exiting={FadeOut.duration(150)}
+            style={styles.modalContent}
+          >
             <TouchableOpacity
-              key={role}
-              style={[
-                styles.roleItem,
-                selectedRole === role && styles.roleItemSelected,
-              ]}
-              onPress={() => handleSelect(role)}
+              activeOpacity={1}
+              onPress={(e) => e.stopPropagation()}
             >
-              <Text
-                style={[
-                  styles.roleItemText,
-                  selectedRole === role && styles.roleItemTextSelected,
-                ]}
-              >
-                {role}
-              </Text>
+              <View style={styles.roleList}>
+                <ScrollView
+                  showsVerticalScrollIndicator={true}
+                  nestedScrollEnabled={true}
+                >
+                  {roles.map((role) => (
+                    <TouchableOpacity
+                      key={role}
+                      style={[
+                        styles.roleItem,
+                        selectedRole === role && styles.roleItemSelected,
+                      ]}
+                      onPress={() => handleSelect(role)}
+                    >
+                      <Text
+                        style={[
+                          styles.roleItemText,
+                          selectedRole === role && styles.roleItemTextSelected,
+                        ]}
+                      >
+                        {role}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
             </TouchableOpacity>
-          ))}
-        </Animated.View>
-      )}
+          </Animated.View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 };
@@ -131,10 +166,20 @@ const styles = StyleSheet.create({
     color: "#6b7280",
     marginLeft: 8,
   },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 24,
+  },
+  modalContent: {
+    width: "100%",
+    maxWidth: 400,
+  },
   roleList: {
     backgroundColor: "#ffffff",
     borderRadius: 12,
-    marginTop: 8,
     borderWidth: 1,
     borderColor: "#e5e7eb",
     shadowColor: "#000",
@@ -143,6 +188,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
     overflow: "hidden",
+    maxHeight: 300,
   },
   roleItem: {
     padding: 16,
@@ -164,4 +210,3 @@ const styles = StyleSheet.create({
 });
 
 export default RolePicker;
-
