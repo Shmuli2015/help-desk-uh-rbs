@@ -16,6 +16,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { Dimensions } from "react-native";
+import Spinner from "./Spinner";
 
 const { width } = Dimensions.get("window");
 
@@ -26,6 +27,7 @@ interface ButtonProps extends TouchableOpacityProps {
   variant?: "primary" | "secondary";
   showShimmer?: boolean;
   disabled?: boolean;
+  loading?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -33,6 +35,7 @@ const Button: React.FC<ButtonProps> = ({
   variant = "primary",
   showShimmer = false,
   disabled = false,
+  loading = false,
   onPressIn,
   onPressOut,
   style,
@@ -67,37 +70,39 @@ const Button: React.FC<ButtonProps> = ({
   });
 
   const handlePressIn = (e: any) => {
-    if (disabled) return;
+    if (disabled || loading) return;
     buttonScale.value = withSpring(0.95);
     onPressIn?.(e);
   };
 
   const handlePressOut = (e: any) => {
-    if (disabled) return;
+    if (disabled || loading) return;
     buttonScale.value = withSpring(1);
     onPressOut?.(e);
   };
 
   const gradientColors =
     variant === "primary"
-      ? disabled
+      ? disabled || loading
         ? ["#CCCCCC", "#DDDDDD", "#EEEEEE"]
         : ["#FF8800", "#FFAA44", "#FFBB44"]
-      : disabled
+      : disabled || loading
         ? ["#CCCCCC", "#DDDDDD"]
         : ["#6b7280", "#9ca3af"];
+
+  const isDisabled = disabled || loading;
 
   return (
     <AnimatedView style={[buttonAnimatedStyle, style]}>
       <TouchableOpacity
         style={[
           styles.buttonContainer,
-          disabled && styles.buttonContainerDisabled,
+          isDisabled && styles.buttonContainerDisabled,
         ]}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         activeOpacity={0.9}
-        disabled={disabled}
+        disabled={isDisabled}
         {...props}
       >
         <LinearGradient
@@ -106,19 +111,27 @@ const Button: React.FC<ButtonProps> = ({
           start={{ x: 1, y: 0 }}
           end={{ x: 0, y: 0 }}
         >
-          {showShimmer && !disabled && (
+          {showShimmer && !isDisabled && (
             <View style={styles.shimmerContainer}>
               <AnimatedView style={[styles.shimmer, shimmerStyle]} />
             </View>
           )}
-          <Text
-            style={[
-              styles.buttonText,
-              disabled && styles.buttonTextDisabled,
-            ]}
-          >
-            {title}
-          </Text>
+          <View style={styles.buttonContent}>
+            {loading && (
+              <View style={styles.spinnerContainer}>
+                <Spinner size={20} color="#FF8800" />
+              </View>
+            )}
+            <Text
+              style={[
+                styles.buttonText,
+                isDisabled && styles.buttonTextDisabled,
+                loading && styles.buttonTextLoading,
+              ]}
+            >
+              {title}
+            </Text>
+          </View>
         </LinearGradient>
       </TouchableOpacity>
     </AnimatedView>
@@ -148,6 +161,15 @@ const styles = StyleSheet.create({
     position: "relative",
     overflow: "hidden",
   },
+  buttonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  spinnerContainer: {
+    marginRight: 8,
+  },
   shimmerContainer: {
     position: "absolute",
     top: 0,
@@ -171,6 +193,9 @@ const styles = StyleSheet.create({
   },
   buttonTextDisabled: {
     color: "#999999",
+  },
+  buttonTextLoading: {
+    opacity: 0.9,
   },
 });
 

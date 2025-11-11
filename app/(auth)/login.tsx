@@ -17,15 +17,28 @@ const LoginScreen = () => {
   const router = useRouter();
   const [driverCode, setDriverCode] = useState("");
   const [idNumber, setIdNumber] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const isButtonDisabled = !driverCode.trim() || !idNumber.trim();
 
-  const handleLogin = () => {
-    if (isButtonDisabled) return;
-    // Add login logic here
-    console.log("Login:", { driverCode, idNumber });
-    // Navigate to main tabs screen after successful login
-    router.replace("/(tabs)/new-request");
+  const handleLogin = async () => {
+    if (isButtonDisabled || isLoading) return;
+
+    setIsLoading(true);
+
+    try {
+      // Add login logic here
+      console.log("Login:", { driverCode, idNumber });
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Navigate to main tabs screen after successful login
+      router.replace("/(tabs)/new-request");
+    } catch (error) {
+      console.error("Login error:", error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -73,7 +86,8 @@ const LoginScreen = () => {
                 title="התחבר"
                 onPress={handleLogin}
                 disabled={isButtonDisabled}
-                showShimmer={!isButtonDisabled}
+                loading={isLoading}
+                showShimmer={!isButtonDisabled && !isLoading}
                 style={styles.button}
               />
             </Animated.View>
